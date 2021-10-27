@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import Button from '../Component/Button';
 import Input from '../Component/Input';
 import IconButton from '../Component/IconButton';
 import Container from '../Component/Container';
+import { Link } from '@react-navigation/native';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const windowHeight = useWindowDimensions().height;
 
   return (
     <Container>
       <Input 
-        label="Email" 
+        label="Email ou número de telefone" 
         value={email} 
         onChangeText={setEmail} 
-        style={styles.input}
+        style={{ marginBottom: windowHeight * 0.035470085 }}
       />
       <Input 
         secureTextEntry={!showPassword} 
@@ -26,26 +28,37 @@ const SignIn = () => {
         right={
           <IconButton 
             icon={showPassword ? "eye" : "eye-off"} 
-            size={36} 
-            onPress={() => setShowPassword(!showPassword)}
+            size={30} 
+            onPress={() => setShowPassword(!showPassword)} 
+            style={{
+              backgroundColor: '#ffff00'
+            }}
           />
         } 
-        style={styles.input}
+        style={[styles.input, { marginBottom: windowHeight * 0.061111111 }]}
       />
       <Button 
         onPress={() => {}} 
-        title="Entrar"
+        title="Login" 
+        style={{ marginBottom: windowHeight * 0.088034188 }}
       />
+      <Link 
+        to="/ForgotPassword" 
+        style={{ color: 'blue' }}
+      >
+        Forget password
+      </Link>
     </Container>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: '5%'
+    paddingHorizontal: '5%',
+    backgroundColor: '#ffffff'
   },
   input: {
-    marginBottom: 20
+    
   }
 });
 

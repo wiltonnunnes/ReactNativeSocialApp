@@ -1,18 +1,34 @@
 import React from 'react';
 import Button from '../Component/Button';
 import Container from '../Component/Container';
+import { Link } from '@react-navigation/native';
+import { useWindowDimensions, Image } from 'react-native';
+import AppText from '../Component/AppText';
 
 const Main = ({ navigation }) => {
+  const windowHeight = useWindowDimensions().height;
   return (
     <Container>
-      <Button 
-        title="Registre-se" 
-        onPress={() => navigation.navigate('Signup')}
+      <Image 
+        source={require('../../assets/images/icon-48.png')}
       />
+      <AppText style={{ marginBottom: windowHeight * 0.044017094 }}>
+        See what's happening in the world right now.
+      </AppText>
       <Button 
-        title="Entrar" 
-        onPress={() => navigation.navigate('Login')}
+        title="Create account" 
+        onPress={() => navigation.navigate('Signup1')} 
+        style={{ marginBottom: windowHeight * 0.33974359 }}
       />
+      <AppText>
+        {"Have an account already? "}
+        <Link 
+          to="/Login" 
+          style={{ color: 'blue' }}
+        >
+          Log in
+        </Link>
+      </AppText>
     </Container>
   );
 };

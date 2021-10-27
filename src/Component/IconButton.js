@@ -11,12 +11,7 @@ const IconButton = ({
 }) => {
   return (
     <TouchableOpacity 
-      style={[
-        {
-          borderRadius: Math.round(size / 2),
-        },
-        style
-      ]} 
+      style={style} 
       onPress={onPress}
     >
       <Icon 

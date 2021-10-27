@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, Text } from 'react-native';
+import { View, TextInput, StyleSheet, Text, Animated } from 'react-native';
 
 class Input extends React.Component {
   constructor(props) {
@@ -7,6 +7,7 @@ class Input extends React.Component {
     this.state = { isFocused: false };
     this.handleFocus = this.handleFocus.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
+    this._animatedIsFocused = new Animated.Value(0);
   }
 
   handleFocus() {
@@ -19,6 +20,14 @@ class Input extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    Animated.timing(this._animatedIsFocused, {
+      toValue: this.state.isFocused ? 1 : 0,
+      duration: 200,
+      useNativeDriver: false
+    }).start();
+  }
+
   render() {
     const {left, right, style, label, ...textInputProps} = this.props;
     const { isFocused } = this.state;
@@ -26,17 +35,26 @@ class Input extends React.Component {
     return (
       <View style={[styles.container, style]}>
         {left}
-        <Text 
+        <Animated.Text 
           style={{
             position: 'absolute',
-            top: !isFocused ? 18 : 0,
-            fontSize: !isFocused ? 20 : 14,
-            left: 12,
-            color: !isFocused ? '#aaa' : '#000'
-          }}
+            top: this._animatedIsFocused.interpolate({
+              inputRange: [0, 1],
+              outputRange: [36, 18]
+            }),
+            fontSize: this._animatedIsFocused.interpolate({
+              inputRange: [0, 1],
+              outputRange: [20, 14]
+            }),
+            color: this._animatedIsFocused.interpolate({
+              inputRange: [0, 1],
+              outputRange: ['#aaa', '#000']
+            })
+          }} 
+          numberOfLines={1}
         >
           {label}
-        </Text>
+        </Animated.Text>
         <TextInput 
           style={styles.textInput} 
           onFocus={this.handleFocus} 
@@ -53,14 +71,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     maxWidth: '100%',
-    borderBottomWidth: .5,
-    borderBottomColor: '#000',
     alignItems: 'center',
-    paddingTop: 18
+    paddingVertical: 18,
+    backgroundColor: '#e4e5e9',
   },
   textInput: {
     flexGrow: 1,
-    paddingLeft: 12
+    height: 40
   }
 });
 

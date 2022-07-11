@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, TextInput, StyleSheet, Text, Animated } from 'react-native';
+import React, { useRef } from 'react';
+import { View, TextInput, StyleSheet, Animated } from 'react-native';
 
 class Input extends React.Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class Input extends React.Component {
   }
 
   render() {
-    const {left, right, style, label, ...textInputProps} = this.props;
+    const { left, right, style, label, ...other } = this.props;
     const { isFocused } = this.state;
 
     return (
@@ -38,6 +38,7 @@ class Input extends React.Component {
         <Animated.Text 
           style={{
             position: 'absolute',
+            paddingLeft: 10,
             top: this._animatedIsFocused.interpolate({
               inputRange: [0, 1],
               outputRange: [36, 18]
@@ -59,9 +60,14 @@ class Input extends React.Component {
           style={styles.textInput} 
           onFocus={this.handleFocus} 
           onEndEditing={this.handleBlur} 
-          {...textInputProps}
+          {...other}
         />
-        {right}
+        <View 
+         style={{
+           paddingHorizontal: 20
+         }}>
+          {right}
+        </View>
       </View>
     );
   }
@@ -74,10 +80,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 18,
     backgroundColor: '#e4e5e9',
+    borderRadius: 4,
   },
   textInput: {
     flexGrow: 1,
-    height: 40
+    height: 40,
+    paddingLeft: 10
   }
 });
 

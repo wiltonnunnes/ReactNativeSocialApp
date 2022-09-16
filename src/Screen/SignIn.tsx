@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, useWindowDimensions } from 'react-native';
-import Button from '../Component/Button';
-import Input from '../Component/Input';
-import IconButton from '../Component/IconButton';
-import Container from '../Component/Container';
+import Button from '../components/Button';
+import FloatingLabelInput from '../components/FloatingLabelInput';
+import IconButton from '../components/IconButton';
+import Container from '../components/Container';
 import { Link } from '@react-navigation/native';
 
 const SignIn = () => {
@@ -14,13 +14,13 @@ const SignIn = () => {
 
   return (
     <Container>
-      <Input 
+      <FloatingLabelInput 
         label="Email ou número de telefone" 
         value={email} 
         onChangeText={setEmail} 
         style={{ marginBottom: windowHeight * 0.035470085 }}
       />
-      <Input 
+      <FloatingLabelInput 
         secureTextEntry={!showPassword} 
         label="Password" 
         value={password} 

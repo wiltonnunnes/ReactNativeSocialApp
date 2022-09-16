@@ -1,13 +1,26 @@
-import React, { useRef } from 'react';
-import { View, TextInput, StyleSheet, Animated } from 'react-native';
+import React, { ReactNode } from 'react';
+import { View, TextInput, StyleSheet, Animated, TextInputProps } from 'react-native';
 
-class Input extends React.Component {
-  constructor(props) {
+interface Props extends TextInputProps {
+  left: ReactNode;
+  right: ReactNode;
+  label: string;
+};
+
+type State = {
+  isFocused: boolean;
+  animatedIsFocused: Animated.Value;
+};
+
+class FloatingLabelInput extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
-    this.state = { isFocused: false };
+    this.state = { 
+      isFocused: false, 
+      animatedIsFocused: new Animated.Value(this.props.value === '' ? 0 : 1)
+    };
     this.handleFocus = this.handleFocus.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
-    this._animatedIsFocused = new Animated.Value(0);
   }
 
   handleFocus() {
@@ -21,8 +34,8 @@ class Input extends React.Component {
   }
 
   componentDidUpdate() {
-    Animated.timing(this._animatedIsFocused, {
-      toValue: this.state.isFocused ? 1 : 0,
+    Animated.timing(this.state.animatedIsFocused, {
+      toValue: (this.state.isFocused || this.props.value !== '') ? 1 : 0,
       duration: 200,
       useNativeDriver: false
     }).start();
@@ -30,7 +43,7 @@ class Input extends React.Component {
 
   render() {
     const { left, right, style, label, ...other } = this.props;
-    const { isFocused } = this.state;
+    const { isFocused, animatedIsFocused } = this.state;
 
     return (
       <View style={[styles.container, style]}>
@@ -39,15 +52,15 @@ class Input extends React.Component {
           style={{
             position: 'absolute',
             paddingLeft: 10,
-            top: this._animatedIsFocused.interpolate({
+            top: animatedIsFocused.interpolate({
               inputRange: [0, 1],
-              outputRange: [36, 18]
+              outputRange: [18, 0]
             }),
-            fontSize: this._animatedIsFocused.interpolate({
+            fontSize: animatedIsFocused.interpolate({
               inputRange: [0, 1],
               outputRange: [20, 14]
             }),
-            color: this._animatedIsFocused.interpolate({
+            color: animatedIsFocused.interpolate({
               inputRange: [0, 1],
               outputRange: ['#aaa', '#000']
             })
@@ -63,9 +76,8 @@ class Input extends React.Component {
           {...other}
         />
         <View 
-         style={{
-           paddingHorizontal: 20
-         }}>
+          style={styles.rightContainer}
+        >
           {right}
         </View>
       </View>
@@ -76,17 +88,19 @@ class Input extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    maxWidth: '100%',
     alignItems: 'center',
-    paddingVertical: 18,
     backgroundColor: '#e4e5e9',
     borderRadius: 4,
   },
   textInput: {
     flexGrow: 1,
-    height: 40,
-    paddingLeft: 10
+    paddingLeft: 10,
+    fontSize: 20,
+    marginTop: 18
+  },
+  rightContainer: {
+    marginHorizontal: 10
   }
 });
 
-export default Input;
+export default FloatingLabelInput;

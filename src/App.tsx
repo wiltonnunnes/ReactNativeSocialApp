@@ -2,9 +2,9 @@ import 'react-native-gesture-handler';
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Login from './Screen/Login';
+import Login from './Screen/SignIn';
 import Main from './Screen/Main';
-import Signup1 from './Screen/Signup1';
+import SignUp from './Screen/SignUp';
 import SignupContext from './Context/signup';
 import ForgotPassword from './Screen/ForgotPassword';
 
@@ -35,8 +35,8 @@ const App = () => {
             }}
           />
           <Stack.Screen 
-            name="Signup1" 
-            component={Signup1} 
+            name="SignUp" 
+            component={SignUp} 
             options={{
               headerLeftContainerStyle: { paddingLeft: '10.185185185%' }
             }}

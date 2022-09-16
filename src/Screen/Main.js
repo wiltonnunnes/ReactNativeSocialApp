@@ -1,9 +1,9 @@
 import React from 'react';
-import Button from '../Component/Button';
-import Container from '../Component/Container';
+import Button from '../components/Button';
+import Container from '../components/Container';
 import { Link } from '@react-navigation/native';
 import { useWindowDimensions, Image } from 'react-native';
-import AppText from '../Component/AppText';
+import AppText from '../components/AppText';
 
 const Main = ({ navigation }) => {
   const windowHeight = useWindowDimensions().height;
@@ -17,7 +17,7 @@ const Main = ({ navigation }) => {
       </AppText>
       <Button 
         title="Create account" 
-        onPress={() => navigation.navigate('Signup1')} 
+        onPress={() => navigation.navigate('SignUp')} 
         style={{ marginBottom: windowHeight * 0.33974359 }}
       />
       <AppText>

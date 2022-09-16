@@ -1,12 +1,14 @@
 import React, { useContext, useState, useRef } from 'react';
-import Container from '../Component/Container';
+import Container from '../components/Container';
 import SignupContext from '../Context/signup';
-import { View, StyleSheet, useWindowDimensions, Dimensions, Text, TouchableOpacity, InputAccessoryView } from 'react-native';
-import Input from '../Component/Input';
-import IconButton from '../Component/IconButton';
-import BottomSheet from '../Component/BottomSheet';
-import SearchablePicker from '../Component/SearchablePicker';
+import { View, StyleSheet, useWindowDimensions, Dimensions, Text, TouchableOpacity } from 'react-native';
+import FloatingLabelInput from '../components/FloatingLabelInput';
+import BottomSheet from '../components/BottomSheet';
+import SearchablePicker from '../components/SearchablePicker';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Button from '../components/Button';
+import SwitchSelector from '../components/SwitchSelector';
+import IconButton from '../components/IconButton';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -969,83 +971,75 @@ const data = [
   }
 ];
 
-const Button = ({ children, onPress }) => (
-  <TouchableOpacity
-    onPress={onPress}
-    style={{
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: 100,
-      width: 100,
-      borderRadius: 50,
-      backgroundColor: '#0000ff'
-    }}
-  >
-    <Text>
-      {children}
-    </Text>
-  </TouchableOpacity>
-);
-
-const Signup1 = ({ navigation }) => {
+const SignUp = ({ navigation }) => {
   const { login, setLogin } = useContext(SignupContext);
   const windowHeight = useWindowDimensions().height;
   const [bottomSheetIsVisible, setBottomSheetIsVisible] = useState(false);
   const bottomSheetRef = useRef(null);
-  const [name, setName] = useState('');
+  const [loginType, setLoginType] = useState<'phone' | 'e-mail'>('phone');
 
   return (
     <Container>
-      <Input
-        label="Nome"
-        value={name}
-        onChangeText={text => setName(text)}
-        style={{ marginBottom: windowHeight * 0.040598291 }}
-        inputAccessoryViewID="nameInputAccessoryViewID"
-      />
-      <InputAccessoryView nativeID="nameInputAccessoryViewID">
-        <Button onPress={() => {}}>
-          Próximo
-        </Button>
-      </InputAccessoryView>
-      <Input 
-        label="Email" 
-        value={login} 
-        onChangeText={text => setLogin(text)} 
-        style={{ marginBottom: windowHeight * 0.040598291 }} 
-        right={
-          <MaterialCommunityIcons 
-            icon="close-circle"
-            size={24}
-            color="black"
-          />
-        }
-      />
-      <View 
-        style={{ 
-          flexDirection: 'row',
-          justifyContent: 'space-between'
+      <SwitchSelector 
+        options={[
+          {
+            label: 'Telefone',
+            value: 'phone'
+          },
+          {
+            label: 'E-mail',
+            value: 'e-mail'
+          }
+        ]}
+        onPress={value => setLoginType(value)} 
+        style={{
+          marginBottom: windowHeight * 0.040598291
         }}
-      >
-        <TouchableOpacity
-          onPress={() => bottomSheetRef.current.open()}
-          style={{ width: '26.355421687%' }} 
+      />
+      {loginType === 'e-mail' ? (
+        <FloatingLabelInput 
+          label="Email" 
+          value={login} 
+          onChangeText={text => setLogin(text)} 
+          style={{ marginBottom: windowHeight * 0.040598291 }} 
+          right={
+            <IconButton 
+              iconName="close-circle"
+            />
+          }
+        />
+      ) : (
+        <View 
+          style={{ 
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          }}
         >
-          <Input 
-            label="Código do país" 
+          <TouchableOpacity
+            onPress={() => bottomSheetRef.current.open()}
+            style={{ width: '26.355421687%' }} 
+          >
+            <FloatingLabelInput 
+              label="Código do país" 
+              pointerEvents="none"
+            />
+          </TouchableOpacity>
+          <FloatingLabelInput 
+            label="Número de telefone" 
+            style={{ width: '71.536144578%' }} 
             pointerEvents="none"
           />
-        </TouchableOpacity>
-        <Input 
-          label="Número de telefone" 
-          style={{ width: '71.536144578%' }} 
-          pointerEvents="none"
-        />
-      </View>
+        </View>
+      )}
+      <Button 
+        title="Próximo"
+        buttonStyle={{
+          borderRadius: 30
+        }}
+      />
       <BottomSheet
-        isVisible={bottomSheetIsVisible} 
+        isOpen={bottomSheetIsVisible} 
         ref={bottomSheetRef} 
-        height={260}
       >
         <SearchablePicker
           placeholder="Buscar"
@@ -1060,4 +1054,4 @@ const styles = StyleSheet.create({
   input: {}
 });
 
-export default Signup1;
+export default SignUp;

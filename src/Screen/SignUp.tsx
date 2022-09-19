@@ -974,8 +974,7 @@ const data = [
 const SignUp = ({ navigation }) => {
   const { login, setLogin } = useContext(SignupContext);
   const windowHeight = useWindowDimensions().height;
-  const [bottomSheetIsVisible, setBottomSheetIsVisible] = useState(false);
-  const bottomSheetRef = useRef(null);
+  const bottomSheetRef = useRef<BottomSheet | null>(null);
   const [loginType, setLoginType] = useState<'phone' | 'e-mail'>('phone');
 
   return (
@@ -1016,7 +1015,7 @@ const SignUp = ({ navigation }) => {
           }}
         >
           <TouchableOpacity
-            onPress={() => bottomSheetRef.current.open()}
+            onPress={() => bottomSheetRef.current.show()}
             style={{ width: '26.355421687%' }} 
           >
             <FloatingLabelInput 
@@ -1038,8 +1037,8 @@ const SignUp = ({ navigation }) => {
         }}
       />
       <BottomSheet
-        isOpen={bottomSheetIsVisible} 
         ref={bottomSheetRef} 
+        snapPoints={[-400, '100%']}
       >
         <SearchablePicker
           placeholder="Buscar"

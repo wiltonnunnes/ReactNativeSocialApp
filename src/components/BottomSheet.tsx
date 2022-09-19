@@ -1,28 +1,41 @@
-import React, { useState, useImperativeHandle } from 'react';
-import { Modal, View, TouchableWithoutFeedback, Animated, StyleSheet } from 'react-native';
-import GestureDetector from 'react-native-gesture-handler';
-import { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
+import { Modal, View, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import { PanGestureHandler, PanGestureHandlerGestureEvent, GestureHandlerRootView } from 'react-native-gesture-handler';
+import Animated, { useSharedValue, useAnimatedStyle, useAnimatedGestureHandler } from 'react-native-reanimated';
 
 type BottomSheetProps = {
-  index: number;
+  index?: number;
   snapPoints: (number | string)[];
   children: React.ReactNode;
 };
 
-const BottomSheet = ({
-  index,
+const BottomSheet = forwardRef(({
+  index = 0,
   snapPoints,
   children
 }: BottomSheetProps, ref) => {
-  const offsetY = useSharedValue(0);
+  const translateY = useSharedValue(0);
   const animatedStyles = useAnimatedStyle(() => {
     return {
       transform: [
-        { translateY: offsetY.value }
+        { translateY: translateY.value }
       ]
     };
   });
   const [modalVisible, setModalVisible] = useState(false);
+
+  const panGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
+    onStart: () => {},
+    onActive: (event) => {
+      translateY.value = event.translationY;
+    },
+    onEnd: () => {}
+  });
+
+  const show = () => setModalVisible(true);
+
+  if (ref)
+    ref.current = { show };
 
   return (
     <Modal
@@ -37,7 +50,9 @@ const BottomSheet = ({
           style={styles.overlay}
         />
       </TouchableWithoutFeedback>
-      <GestureDetector>
+      <PanGestureHandler
+        onGestureEvent={panGestureEvent}
+      >
         <Animated.View
           style={[
             {
@@ -53,10 +68,10 @@ const BottomSheet = ({
         >
           {children}
         </Animated.View>
-      </GestureDetector>
+      </PanGestureHandler>
     </Modal>
   );
-};
+});
 
 const styles = StyleSheet.create({
   overlay: {

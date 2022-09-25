@@ -23,7 +23,7 @@ const Main = ({ navigation }) => {
       <AppText>
         {"Have an account already? "}
         <Link 
-          to="/Login" 
+          to="/SignIn" 
           style={{ color: 'blue' }}
         >
           Log in

@@ -972,10 +972,11 @@ const data = [
 ];
 
 const SignUp = ({ navigation }) => {
-  const { login, setLogin } = useContext(SignupContext);
   const windowHeight = useWindowDimensions().height;
   const bottomSheetRef = useRef<BottomSheet | null>(null);
   const [loginType, setLoginType] = useState<'phone' | 'e-mail'>('phone');
+  const [countryCode, setCountryCode] = useState(data[0].value);
+  const [login, setLogin] = useState('');
 
   return (
     <Container>
@@ -1002,16 +1003,18 @@ const SignUp = ({ navigation }) => {
           onChangeText={text => setLogin(text)} 
           style={{ marginBottom: windowHeight * 0.040598291 }} 
           right={
-            <IconButton 
+            login.length > 0 ? <IconButton 
               iconName="close-circle"
-            />
+              onPress={() => setLogin('')}
+            /> : undefined
           }
         />
       ) : (
         <View 
           style={{ 
             flexDirection: 'row',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            marginBottom: windowHeight * 0.040598291
           }}
         >
           <TouchableOpacity
@@ -1021,12 +1024,15 @@ const SignUp = ({ navigation }) => {
             <FloatingLabelInput 
               label="Código do país" 
               pointerEvents="none"
+              value={countryCode}
+              editable={false}
             />
           </TouchableOpacity>
           <FloatingLabelInput 
             label="Número de telefone" 
             style={{ width: '71.536144578%' }} 
             pointerEvents="none"
+            value={login}
           />
         </View>
       )}
@@ -1035,6 +1041,7 @@ const SignUp = ({ navigation }) => {
         buttonStyle={{
           borderRadius: 30
         }}
+        onPress={() => navigation.navigate("ConfirmationCode")}
       />
       <BottomSheet
         ref={bottomSheetRef} 

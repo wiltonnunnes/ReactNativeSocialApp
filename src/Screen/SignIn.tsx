@@ -5,12 +5,14 @@ import FloatingLabelInput from '../components/FloatingLabelInput';
 import IconButton from '../components/IconButton';
 import Container from '../components/Container';
 import { Link } from '@react-navigation/native';
+import { useTogglePasswordVisibility } from '../hooks/useTogglePasswordVisibility';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const windowHeight = useWindowDimensions().height;
+  const { passwordVisibility, rightIcon, handlePasswordVisibility } = useTogglePasswordVisibility();
 
   return (
     <Container>
@@ -21,33 +23,37 @@ const SignIn = () => {
         style={{ marginBottom: windowHeight * 0.035470085 }}
       />
       <FloatingLabelInput 
-        secureTextEntry={!showPassword} 
-        label="Password" 
+        secureTextEntry={!passwordVisibility} 
+        label="Senha" 
         value={password} 
         onChangeText={setPassword} 
         right={
           <IconButton 
-            icon={showPassword ? "eye" : "eye-off"} 
-            size={30} 
-            onPress={() => setShowPassword(!showPassword)} 
-            style={{
-              backgroundColor: '#ffff00'
-            }}
+            iconName={rightIcon} 
+            onPress={handlePasswordVisibility} 
           />
         } 
-        style={[styles.input, { marginBottom: windowHeight * 0.061111111 }]}
-      />
-      <Button 
-        onPress={() => {}} 
-        title="Login" 
-        style={{ marginBottom: windowHeight * 0.088034188 }}
+        style={[styles.input, { marginBottom: 5 }]}
       />
       <Link 
         to="/ForgotPassword" 
-        style={{ color: 'blue' }}
+        style={{ 
+          color: 'blue', 
+          marginBottom: windowHeight * 0.061111111,
+          alignSelf: 'flex-end'
+        }}
       >
-        Forget password
+        Esqueci a senha
       </Link>
+      <Button 
+        onPress={() => {}} 
+        title="Iniciar sessão" 
+        buttonStyle={{ 
+          marginBottom: windowHeight * 0.088034188, 
+          borderRadius: 30
+        }}
+        disabled={email.length == 0}
+      />
     </Container>
   );
 };

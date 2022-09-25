@@ -1,7 +1,6 @@
-import React, { useState, useImperativeHandle, forwardRef } from 'react';
-import { Modal, View, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import React, { useState, useRef, forwardRef } from 'react';
+import { Modal, View, TouchableWithoutFeedback, StyleSheet, Animated } from 'react-native';
 import { PanGestureHandler, PanGestureHandlerGestureEvent, GestureHandlerRootView } from 'react-native-gesture-handler';
-import Animated, { useSharedValue, useAnimatedStyle, useAnimatedGestureHandler } from 'react-native-reanimated';
 
 type BottomSheetProps = {
   index?: number;
@@ -14,28 +13,15 @@ const BottomSheet = forwardRef(({
   snapPoints,
   children
 }: BottomSheetProps, ref) => {
-  const translateY = useSharedValue(0);
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { translateY: translateY.value }
-      ]
-    };
-  });
+  const translateY = useRef(new Animated.Value(0)).current;
   const [modalVisible, setModalVisible] = useState(false);
-
-  const panGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent>({
-    onStart: () => {},
-    onActive: (event) => {
-      translateY.value = event.translationY;
-    },
-    onEnd: () => {}
-  });
 
   const show = () => setModalVisible(true);
 
+  const hide = () => setModalVisible(false);
+
   if (ref)
-    ref.current = { show };
+    ref.current = { show, hide };
 
   return (
     <Modal
@@ -44,30 +30,37 @@ const BottomSheet = forwardRef(({
       transparent={true}
     >
       <TouchableWithoutFeedback
-        onPress={this.close}
+        onPress={hide}
       >
         <View
           style={styles.overlay}
         />
       </TouchableWithoutFeedback>
-      <PanGestureHandler
-        onGestureEvent={panGestureEvent}
+      <PanGestureHandler 
+        onHandlerStateChange={Animated.event(
+          [
+            {
+              nativeEvent: {
+                translateY: this.translateY
+              },
+            }
+          ]
+        )}
       >
-        <Animated.View
+        <View
           style={[
             {
               backgroundColor: "white",
               position: "absolute",
-              bottom: 0,
+              top: 400,
               width: '100%',
               flex: 1,
               paddingHorizontal: '3.888888889%',
-            },
-            animatedStyles
+            }
           ]}
         >
           {children}
-        </Animated.View>
+        </View>
       </PanGestureHandler>
     </Modal>
   );

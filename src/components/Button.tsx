@@ -4,9 +4,10 @@ import { Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle } from 'react-
 interface ButtonProps {
   onPress: () => void;
   title: string;
-  type: 'solid' | 'outline' | 'clear';
+  type?: 'solid' | 'outline' | 'clear';
   buttonStyle?: StyleProp<ViewStyle>;
-  color: string;
+  color?: string;
+  disabled?: boolean;
 };
 
 const Button = ({
@@ -14,7 +15,8 @@ const Button = ({
   title,
   type = 'solid',
   buttonStyle,
-  color = "#009688"
+  color = "#009688",
+  disabled = false
 }: ButtonProps) => {
   switch (type) {
     case 'solid':
@@ -27,7 +29,8 @@ const Button = ({
               backgroundColor: color
             },
             buttonStyle
-          ]}
+          ]} 
+          disabled={disabled}
         >
           <Text style={styles.buttonText}>{title}</Text>
         </TouchableOpacity>
@@ -39,7 +42,8 @@ const Button = ({
           style={[
             styles.buttonContainer,
             buttonStyle
-          ]}
+          ]} 
+          disabled={disabled}
         >
           <Text style={styles.buttonText}>{title}</Text>
         </TouchableOpacity>
@@ -55,7 +59,8 @@ const Button = ({
               borderColor: "#009688"
             },
             buttonStyle
-          ]}
+          ]} 
+          disabled={disabled}
         >
           <Text style={styles.buttonText}>{title}</Text>
         </TouchableOpacity>

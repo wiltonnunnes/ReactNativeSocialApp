@@ -5,15 +5,15 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 type IconButtonProps = {
   iconName: string;
   onPress(): any;
-  iconSize: number;
-  iconColor: string;
+  iconSize?: number;
+  iconColor?: string;
 };
 
 const IconButton = ({ 
   iconName, 
   onPress, 
   iconSize = 24,
-  iconColor
+  iconColor = 'black'
 }: IconButtonProps) => {
   let size = Math.round(iconSize * 1.5);
   return (

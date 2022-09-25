@@ -63,7 +63,8 @@ class FloatingLabelInput extends React.Component<Props, State> {
             color: animatedIsFocused.interpolate({
               inputRange: [0, 1],
               outputRange: ['#aaa', '#000']
-            })
+            }),
+            width: '100%'
           }} 
           numberOfLines={1}
         >
@@ -91,6 +92,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#e4e5e9',
     borderRadius: 4,
+    position: 'relative'
   },
   textInput: {
     flexGrow: 1,
